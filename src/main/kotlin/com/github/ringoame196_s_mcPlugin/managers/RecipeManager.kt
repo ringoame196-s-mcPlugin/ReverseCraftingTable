@@ -1,5 +1,6 @@
 package com.github.ringoame196_s_mcPlugin.managers
 
+import com.github.ringoame196_s_mcPlugin.RecipeItemData
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
@@ -9,15 +10,27 @@ import org.bukkit.inventory.ShapelessRecipe
 import kotlin.random.Random
 
 object RecipeManager {
-    fun acquisitionRecipeItem(itemMaterial: Material): List<ItemStack> {
-        val recipes = acquisitionRecipes(itemMaterial)
+    fun acquisitionRecipeItem(item: ItemStack): RecipeItemData? {
+        val itemType = item.type
+        val amount = item.amount
+        val recipes = acquisitionRecipes(itemType)
+        if (recipes.isEmpty()) return null
         val recipe = recipes[Random.nextInt(0, recipes.size)]
+        val requiredCount = recipe.result.amount
 
-        return when (recipe) {
+        // 必要なアイテム数がない場合
+        if (amount < requiredCount) {
+            return RecipeItemData(item, mutableListOf(), 0)
+        }
+
+        val recipeItem = when (recipe) { // レシピ内容
             is ShapedRecipe -> acquisitionRecipeItem(recipe)
             is ShapelessRecipe -> acquisitionRecipeItem(recipe)
             else -> mutableListOf()
         }
+        val multiple = amount / requiredCount
+        item.amount = amount % requiredCount
+        return RecipeItemData(item, recipeItem, multiple)
     }
 
     private fun acquisitionRecipes(itemMaterial: Material): List<Recipe> {
