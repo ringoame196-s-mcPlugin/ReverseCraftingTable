@@ -1,5 +1,9 @@
 # ReverseCraftingTable
 
+
+https://github.com/user-attachments/assets/521fe678-2036-4de9-90b7-9ef0e1b48496
+
+
 ## プラグイン説明
 逆作業台 クラフトする前のアイテムに返す
 
