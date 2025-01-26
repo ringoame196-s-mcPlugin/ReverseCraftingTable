@@ -58,7 +58,7 @@ class RecipeGUIEvents : Listener {
         val recipeItemData = RecipeManager.acquisitionRecipeItem(selectItem ?: return)
         val recipeItemList = recipeItemData?.recipeItemList
         val multiple = recipeItemData?.multiple ?: 0
-        val inItem = recipeItemData?.inItem
+        val remainingItem = recipeItemData?.remainingItem
 
         if (recipeItemList == null || recipeItemList.isEmpty()) {
             val sound = Sound.BLOCK_NOTE_BLOCK_BELL
@@ -71,7 +71,7 @@ class RecipeGUIEvents : Listener {
             }
             val sound = Sound.BLOCK_ANVIL_USE
             player.playSound(player, sound, 1f, 1f)
-            gui.setItem(inItemSlot, inItem)
+            gui.setItem(inItemSlot, remainingItem)
         }
     }
 
@@ -81,6 +81,7 @@ class RecipeGUIEvents : Listener {
         val gui = e.view
         val guiTitle = gui.title
 
+        // アイテム取り忘れ対策
         if (guiTitle != recipeGUIManager.guiTitle) return
         val item = gui.getItem(inSlot) ?: return
         player.inventory.addItem(item)
